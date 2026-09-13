@@ -1,3 +1,4 @@
+import "./config/components.config";
 import { createCliRenderer } from "@opentui/core";
 import {
 	createRoot,

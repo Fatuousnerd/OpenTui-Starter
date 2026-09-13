@@ -19,9 +19,7 @@
 	"dependencies": {
 		"@opentui/core": "^0.5.11",
 		"@opentui/react": "^0.5.11",
-		"@tailwindcss/postcss": "^4.3.3",
-		"postcss": "^8.5.28",
 		"react": "^19.3.0",
-		"tailwindcss": "^4.3.3"
+		"zustand": "^5.0.15"
 	}
 }
