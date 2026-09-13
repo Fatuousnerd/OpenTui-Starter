@@ -21,6 +21,10 @@ function App() {
 			</text>
 			<box style={{ backgroundColor: "red", padding: 5 }}>
 				<text>Press ESC to close</text>
+				<consoleButton
+					label="Click me!"
+					style={{ border: true, backgroundColor: "green" }}
+				/>
 			</box>
 		</box>
 	);
