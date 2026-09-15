@@ -1,35 +1,68 @@
-import "./config/components.config";
-import { createCliRenderer } from "@opentui/core";
 import {
-	createRoot,
-	useKeyboard,
-	useRenderer,
-	useTerminalDimensions,
-} from "@opentui/react";
+	BoxRenderable,
+	createCliRenderer,
+	TextRenderable,
+} from "@opentui/core";
 
-function App() {
-	const renderer = useRenderer();
-	const { width, height } = useTerminalDimensions();
+const renderer = await createCliRenderer({
+	exitOnCtrlC: true,
+	backgroundColor: "#1131E9",
+});
 
-	useKeyboard((key) => {
-		if (key.name === "escape") renderer.destroy();
-	});
+let count = 0;
+const counter = new TextRenderable(renderer, {
+	id: "counter",
+	content: "Count 0",
+	fg: "#FFFFFF",
+});
 
-	return (
-		<box backgroundColor={"blue"} padding={2}>
-			<text>
-				Terminal: {width}x{height}
-			</text>
-			<box style={{ backgroundColor: "red", padding: 5 }}>
-				<text>Press ESC to close</text>
-				<consoleButton
-					label="Click me!"
-					style={{ border: true, backgroundColor: "green" }}
-				/>
-			</box>
-		</box>
-	);
-}
+const panel = new BoxRenderable(renderer, {
+	width: "100%",
+	height: 9,
+	backgroundColor: "#1131E9",
+	alignItems: "center",
+	justifyContent: "center",
+	padding: 1,
+});
 
-const renderer = await createCliRenderer();
-createRoot(renderer).render(<App />);
+const content = new BoxRenderable(renderer, {
+	width: "100%",
+	height: "100%",
+	backgroundColor: "#2947F0",
+	padding: 1,
+	flexDirection: "column",
+	gap: 1,
+	alignItems: "center",
+});
+
+content.add(
+	new TextRenderable(renderer, {
+		content: `Hello OpenTUI`,
+		fg: "#DCE3FF",
+	}),
+);
+
+content.add(counter);
+content.add(
+	new TextRenderable(renderer, {
+		content: `left/right change | q quit`,
+		fg: "#AEBBFF",
+	}),
+);
+
+panel.add(content);
+
+renderer.root.add(panel);
+
+renderer.keyInput.on("keypress", (key) => {
+	if (key.name === "q") {
+		renderer.destroy();
+		return;
+	}
+
+	if (key.name === "left") count--;
+	else if (key.name === "right") count++;
+	else return;
+
+	counter.content = `Count ${count}`;
+});
